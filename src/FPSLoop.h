@@ -2,20 +2,25 @@
 
 typedef enum FPSLoop_Type
 {
+    // invalid
     FPSLOOP_TYPE_INVALID = -1,
+    // checks the time each tick
     FPSLOOP_TYPE_BURNCPU,
+    // expects vsync to wait between frames, does no timing work
     FPSLOOP_TYPE_VSYNC,
+    // sleeps for the remainder of the frame
     FPSLOOP_TYPE_SLEEP,
+    // sleeps for small periods & checks if it has overslept
     FPSLOOP_TYPE_SLEEP_SMART,
 } FPSLoop_Type;
 
 typedef struct FPSLoop
 {
-    /** type of loop timing */
+    // type of loop timing
     FPSLoop_Type type;
-    /** frames per second */
+    // frames per second
     int FPS;
-    /** function that runs once per frame & returns a bool for whether or not to exit */
+    // your app logic function. runs once per frame & returns a bool for whether or not to exit
     int (*frame)();
 } FPSLoop;
 
