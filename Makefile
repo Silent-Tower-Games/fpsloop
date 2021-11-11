@@ -12,3 +12,6 @@ application:
 	${CC} ${OBJS} -o main `sdl2-config --libs`
 
 objs: $(OBJS)
+
+clear:
+	rm -f ./src/*.o ./main

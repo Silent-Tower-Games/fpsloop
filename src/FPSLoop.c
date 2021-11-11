@@ -13,9 +13,16 @@ FPSLoop FPSLoop_Create(FPSLoop_Type type, int FPS, int (*frame)())
     };
 }
 
+static int FPSLoop_Frame(int (*frame)())
+{
+    int frameResult = frame();
+    
+    return frameResult;
+}
+
 static void FPSLoop_Run_Vsync(int FPS, int (*frame)())
 {
-    while(!frame()){}
+    while(!FPSLoop_Frame(frame)){}
 }
 
 static void FPSLoop_Run_BurnCPU(int FPS, int (*frame)())
@@ -41,9 +48,7 @@ static void FPSLoop_Run_BurnCPU(int FPS, int (*frame)())
         
         while(accumulator > FPSMS)
         {
-            //printf("%" PRIu64 " ? %" PRIu64 "\n", accumulator, FPSMS);
-            
-            quit = frame();
+            quit = FPSLoop_Frame(frame);
             
             if(quit)
             {

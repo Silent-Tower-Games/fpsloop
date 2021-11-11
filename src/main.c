@@ -17,18 +17,19 @@ int frame()
     return 0;
 }
 
-clock_t before;
-clock_t after;
 int main()
 {
     printf("Hello, World!\n");
     
     int runTimes = 5;
-    int amount[runTimes];
+    Uint64 amount[runTimes];
     int average = 0;
     
-    int delta;
-    int deltaMS;
+    const Uint64 freq = SDL_GetPerformanceFrequency();
+    Uint64 before;
+    Uint64 after;
+    Uint64 delta;
+    Uint64 deltaMS;
     
     FPSLoop fps = FPSLoop_Create(FPSLOOP_TYPE_BURNCPU, 60, frame);
     
@@ -36,16 +37,16 @@ int main()
     {
         frameCounter = 30;
         
-        before = clock();
+        before = SDL_GetPerformanceCounter();
         FPSLoop_Run(fps);
-        after = clock();
+        after = SDL_GetPerformanceCounter();
         
         assert(frameCounter == 0);
         
         delta = after - before;
-        deltaMS = (delta * 1000) / CLOCKS_PER_SEC;
+        deltaMS = (delta * 1000) / freq;
         
-        printf("That took %d (%d ms)\n", delta, deltaMS);
+        printf("That took %" PRIu64 " (%" PRIu64 " ms)\n", delta, deltaMS);
         
         amount[i] = deltaMS;
         average += deltaMS;
