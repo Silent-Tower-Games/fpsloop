@@ -34,8 +34,8 @@ int main()
     Uint64 after;
     Uint64 delta;
     Uint64 deltaMS;
-    FPSLoop_Type loopType = FPSLOOP_TYPE_BURNCPU;
     
+    FPSLoop_Type loopType = FPSLOOP_TYPE_SLEEPSMART;
     FPSLoop* fps = FPSLoop_Create(loopType, 60, frame);
     
     window = SDL_CreateWindow(
@@ -49,6 +49,7 @@ int main()
     renderer = SDL_CreateRenderer(
         window,
         -1,
+        // We want to turn on VSync if we're usuing the VSync-oriented loop
         loopType == FPSLOOP_TYPE_VSYNC ? SDL_RENDERER_PRESENTVSYNC : SDL_RENDERER_ACCELERATED
     );
     
