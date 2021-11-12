@@ -2,15 +2,30 @@
 #include <SDL2/SDL.h>
 #include "FPSLoop.h"
 
-FPSLoop FPSLoop_Create(FPSLoop_Type type, int FPS, int (*frame)())
+typedef struct FPSLoop
+{
+    // type of loop timing
+    FPSLoop_Type type;
+    // frames per second
+    int FPS;
+    // your app logic function. runs once per frame & returns a bool for whether or not to exit
+    int (*frame)();
+    // 
+    //Uint64 
+} FPSLoop;
+
+FPSLoop* FPSLoop_Create(FPSLoop_Type type, int FPS, int (*frame)())
 {
     assert(frame != NULL);
     
-    return (FPSLoop){
+    FPSLoop* ret = malloc(sizeof(FPSLoop));
+    *ret = (FPSLoop){
         .type = type,
         .FPS = FPS,
         .frame = frame,
     };
+    
+    return ret;
 }
 
 static int FPSLoop_Frame(int (*frame)())
@@ -141,28 +156,28 @@ static void FPSLoop_Run_SleepSmart(int FPS, int (*frame)())
     }
 }
 
-void FPSLoop_Run(FPSLoop fps)
+void FPSLoop_Run(FPSLoop* fps)
 {
-    switch(fps.type)
+    switch(fps->type)
     {
         case FPSLOOP_TYPE_VSYNC:
         {
-            FPSLoop_Run_Vsync(fps.FPS, fps.frame);
+            FPSLoop_Run_Vsync(fps->FPS, fps->frame);
         } break;
         
         case FPSLOOP_TYPE_BURNCPU:
         {
-            FPSLoop_Run_BurnCPU(fps.FPS, fps.frame);
+            FPSLoop_Run_BurnCPU(fps->FPS, fps->frame);
         } break;
         
         case FPSLOOP_TYPE_SLEEP:
         {
-            FPSLoop_Run_Sleep(fps.FPS, fps.frame);
+            FPSLoop_Run_Sleep(fps->FPS, fps->frame);
         } break;
         
         case FPSLOOP_TYPE_SLEEPSMART:
         {
-            FPSLoop_Run_SleepSmart(fps.FPS, fps.frame);
+            FPSLoop_Run_SleepSmart(fps->FPS, fps->frame);
         } break;
         
         default:

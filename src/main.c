@@ -34,8 +34,9 @@ int main()
     Uint64 after;
     Uint64 delta;
     Uint64 deltaMS;
+    FPSLoop_Type loopType = FPSLOOP_TYPE_BURNCPU;
     
-    FPSLoop fps = FPSLoop_Create(FPSLOOP_TYPE_SLEEPSMART, 60, frame);
+    FPSLoop* fps = FPSLoop_Create(loopType, 60, frame);
     
     window = SDL_CreateWindow(
         "Test Window",
@@ -48,7 +49,7 @@ int main()
     renderer = SDL_CreateRenderer(
         window,
         -1,
-        fps.type == FPSLOOP_TYPE_VSYNC ? SDL_RENDERER_PRESENTVSYNC : SDL_RENDERER_ACCELERATED
+        loopType == FPSLOOP_TYPE_VSYNC ? SDL_RENDERER_PRESENTVSYNC : SDL_RENDERER_ACCELERATED
     );
     
     for(int i = 0; i < runTimes; i++)

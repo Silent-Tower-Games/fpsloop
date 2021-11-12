@@ -19,17 +19,7 @@ typedef enum FPSLoop_Type
     FPSLOOP_TYPE_SLEEPSMART,
 } FPSLoop_Type;
 
-typedef struct FPSLoop
-{
-    // type of loop timing
-    FPSLoop_Type type;
-    // frames per second
-    int FPS;
-    // your app logic function. runs once per frame & returns a bool for whether or not to exit
-    int (*frame)();
-    // 
-    //Uint64 
-} FPSLoop;
+typedef struct FPSLoop FPSLoop;
 
 /**
  * Create an FPSLoop instance
@@ -39,11 +29,11 @@ typedef struct FPSLoop
  * 
  * \returns FPSLoop instance
  */
-FPSLoop FPSLoop_Create(FPSLoop_Type type, int FPS, int (*frame)());
+FPSLoop* FPSLoop_Create(FPSLoop_Type type, int FPS, int (*frame)());
 
 /**
  * Run your FPSLoop application
  * 
  * \param fps your FPSLoop instance
  */
-void FPSLoop_Run(FPSLoop fps);
+void FPSLoop_Run(FPSLoop* fps);
