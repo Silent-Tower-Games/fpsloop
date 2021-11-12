@@ -9,7 +9,7 @@ OBJS = $(patsubst %.c, %.o, $(SRC))
 
 application:
 	make objs
-	${CC} ${OBJS} -o main `sdl2-config --libs`
+	${CC} -g ${OBJS} -o main `sdl2-config --libs`
 
 objs: $(OBJS)
 

@@ -4,10 +4,14 @@
 #include <SDL2/SDL.h>
 #include "FPSLoop.h"
 
+SDL_Window* window;
+SDL_Renderer* renderer;
 int frameCounter;
 int frame()
 {
     frameCounter--;
+    
+    SDL_RenderPresent(renderer);
     
     if(frameCounter <= 0)
     {
@@ -31,7 +35,21 @@ int main()
     Uint64 delta;
     Uint64 deltaMS;
     
-    FPSLoop fps = FPSLoop_Create(FPSLOOP_TYPE_BURNCPU, 60, frame);
+    FPSLoop fps = FPSLoop_Create(FPSLOOP_TYPE_SLEEPSMART, 60, frame);
+    
+    window = SDL_CreateWindow(
+        "Test Window",
+        SDL_WINDOWPOS_UNDEFINED,
+        SDL_WINDOWPOS_UNDEFINED,
+        100,
+        100,
+        0
+    );
+    renderer = SDL_CreateRenderer(
+        window,
+        -1,
+        fps.type == FPSLOOP_TYPE_VSYNC ? SDL_RENDERER_PRESENTVSYNC : SDL_RENDERER_ACCELERATED
+    );
     
     for(int i = 0; i < runTimes; i++)
     {
@@ -55,6 +73,9 @@ int main()
     average /= runTimes;
     
     printf("Average MS: %d\n", average);
+    
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
     
     return 0;
 }

@@ -1,5 +1,10 @@
 #pragma once
 
+#include <SDL2/SDL.h>
+
+/**
+ * Ways for FPSLoop to keep time
+ */
 typedef enum FPSLoop_Type
 {
     // invalid
@@ -11,7 +16,7 @@ typedef enum FPSLoop_Type
     // sleeps for the remainder of the frame
     FPSLOOP_TYPE_SLEEP,
     // sleeps for small periods & checks if it has overslept
-    FPSLOOP_TYPE_SLEEP_SMART,
+    FPSLOOP_TYPE_SLEEPSMART,
 } FPSLoop_Type;
 
 typedef struct FPSLoop
@@ -22,6 +27,8 @@ typedef struct FPSLoop
     int FPS;
     // your app logic function. runs once per frame & returns a bool for whether or not to exit
     int (*frame)();
+    // 
+    //Uint64 
 } FPSLoop;
 
 /**
