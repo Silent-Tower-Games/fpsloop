@@ -28,16 +28,41 @@ FPSLoop* FPSLoop_Create(FPSLoop_Type type, int FPS, int (*frame)())
     return ret;
 }
 
+char* FPSLoop_GetTypeString(FPSLoop* fps)
+{
+    return FPSLoop_GetTypeStringFromType(fps->type);
+}
+
+char* FPSLoop_GetTypeStringFromType(FPSLoop_Type type)
+{
+    switch(type)
+    {
+        case FPSLOOP_TYPE_BURNCPU:
+        {
+            return "Burn CPU";
+        }
+        case FPSLOOP_TYPE_NOTHING:
+        {
+            return "Nothing";
+        }
+        case FPSLOOP_TYPE_SLEEP:
+        {
+            return "Sleep";
+        }
+        case FPSLOOP_TYPE_SLEEPSMART:
+        {
+            return "Sleep Smart";
+        }
+    }
+    
+    return NULL;
+}
+
 static int FPSLoop_Frame(int (*frame)())
 {
     int frameResult = frame();
     
     return frameResult;
-}
-
-static void FPSLoop_Run_Vsync(int FPS, int (*frame)())
-{
-    while(!FPSLoop_Frame(frame)){}
 }
 
 static void FPSLoop_Run_BurnCPU(int FPS, int (*frame)())
@@ -75,6 +100,11 @@ static void FPSLoop_Run_BurnCPU(int FPS, int (*frame)())
     }
 }
 
+static void FPSLoop_Run_Nothing(int FPS, int (*frame)())
+{
+    while(!FPSLoop_Frame(frame)){}
+}
+
 static void FPSLoop_Run_Sleep(int FPS, int (*frame)())
 {
     const Uint64 freq = SDL_GetPerformanceFrequency();
@@ -110,7 +140,7 @@ static void FPSLoop_Run_Sleep(int FPS, int (*frame)())
         
         if(accumulator < FPSMS)
         {
-            SDL_Delay((accumulator * 1000) / freq);
+            SDL_Delay(((FPSMS - accumulator) * 1000) / freq);
         }
     }
 }
@@ -160,9 +190,9 @@ void FPSLoop_Run(FPSLoop* fps)
 {
     switch(fps->type)
     {
-        case FPSLOOP_TYPE_VSYNC:
+        case FPSLOOP_TYPE_NOTHING:
         {
-            FPSLoop_Run_Vsync(fps->FPS, fps->frame);
+            FPSLoop_Run_Nothing(fps->FPS, fps->frame);
         } break;
         
         case FPSLOOP_TYPE_BURNCPU:
@@ -185,4 +215,10 @@ void FPSLoop_Run(FPSLoop* fps)
             assert(0);
         } break;
     }
+}
+
+void FPSLoop_Destroy(FPSLoop* fps)
+{
+    // Simple as that!
+    free(fps);
 }

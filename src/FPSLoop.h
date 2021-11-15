@@ -11,8 +11,8 @@ typedef enum FPSLoop_Type
     FPSLOOP_TYPE_INVALID = -1,
     // checks the time each tick
     FPSLOOP_TYPE_BURNCPU,
-    // expects vsync to wait between frames, does no timing work
-    FPSLOOP_TYPE_VSYNC,
+    // does nothing for timing, just runs in a loop
+    FPSLOOP_TYPE_NOTHING,
     // sleeps for the remainder of the frame
     FPSLOOP_TYPE_SLEEP,
     // sleeps for small periods & checks if it has overslept
@@ -27,13 +27,38 @@ typedef struct FPSLoop FPSLoop;
  * \param type how the FPS timer should work
  * \param FPS how many frames per second your timer should run at
  * 
- * \returns FPSLoop instance
+ * \returns pointer to your FPSLoop instance
  */
 FPSLoop* FPSLoop_Create(FPSLoop_Type type, int FPS, int (*frame)());
 
 /**
+ * Get a string denoting what type of loop timing you're using
+ * 
+ * \param fps pointer to your FPSLoop instance
+ * 
+ * \return type string
+ */
+char* FPSLoop_GetTypeString(FPSLoop* fps);
+
+/**
+ * Get a string denoting what type of loop timing you're using
+ * 
+ * \param type loop type
+ * 
+ * \return type string
+ */
+char* FPSLoop_GetTypeStringFromType(FPSLoop_Type type);
+
+/**
  * Run your FPSLoop application
  * 
- * \param fps your FPSLoop instance
+ * \param fps pointer to your FPSLoop instance
  */
 void FPSLoop_Run(FPSLoop* fps);
+
+/**
+ * Free your FPSLoop memory
+ * 
+ * \param fps pointer to your FPSLoop instance
+ */
+void FPSLoop_Destroy(FPSLoop* fps);

@@ -4,6 +4,10 @@
 #include <SDL2/SDL.h>
 #include "FPSLoop.h"
 
+#ifndef FPSLOOPTYPE
+#define FPSLOOPTYPE FPSLOOP_TYPE_SLEEP
+#endif
+
 SDL_Window* window;
 SDL_Renderer* renderer;
 int frameCounter;
@@ -11,6 +15,7 @@ int frame()
 {
     frameCounter--;
     
+    SDL_RenderClear(renderer);
     SDL_RenderPresent(renderer);
     
     if(frameCounter <= 0)
@@ -35,8 +40,10 @@ int main()
     Uint64 delta;
     Uint64 deltaMS;
     
-    FPSLoop_Type loopType = FPSLOOP_TYPE_SLEEPSMART;
+    FPSLoop_Type loopType = FPSLOOPTYPE;
     FPSLoop* fps = FPSLoop_Create(loopType, 60, frame);
+    
+    printf("Using loop type \"%s\"\n", FPSLoop_GetTypeString(fps));
     
     window = SDL_CreateWindow(
         "Test Window",
@@ -49,8 +56,9 @@ int main()
     renderer = SDL_CreateRenderer(
         window,
         -1,
-        // We want to turn on VSync if we're usuing the VSync-oriented loop
-        loopType == FPSLOOP_TYPE_VSYNC ? SDL_RENDERER_PRESENTVSYNC : SDL_RENDERER_ACCELERATED
+        // We want to turn on Vsync if we're usuing the no-timing loop
+        // So that it doesn't all run at once
+        loopType == FPSLOOP_TYPE_NOTHING ? SDL_RENDERER_PRESENTVSYNC : SDL_RENDERER_ACCELERATED
     );
     
     for(int i = 0; i < runTimes; i++)
@@ -78,6 +86,8 @@ int main()
     
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
+    
+    FPSLoop_Destroy(fps);
     
     return 0;
 }
