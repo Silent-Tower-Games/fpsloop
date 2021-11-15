@@ -3,7 +3,7 @@
         {
             "type": "shell",
             "label": "Make",
-            "command": "make",
+            "command": "make CFLAGS=-g",
             "args": [],
             "group": {
                 "kind": "build",

@@ -5,7 +5,7 @@
 #include "FPSLoop.h"
 
 #ifndef FPSLOOPTYPE
-#define FPSLOOPTYPE FPSLOOP_TYPE_SLEEP
+#define FPSLOOPTYPE FPSLOOP_TYPE_SLEEPSMART
 #endif
 
 SDL_Window* window;
@@ -43,7 +43,7 @@ int main()
     FPSLoop_Type loopType = FPSLOOPTYPE;
     FPSLoop* fps = FPSLoop_Create(loopType, 60, frame);
     
-    printf("Using loop type \"%s\"\n", FPSLoop_GetTypeString(fps));
+    printf("Using loop type \"%s\"\n", FPSLoop_GetLoopTypeString(fps));
     
     window = SDL_CreateWindow(
         "Test Window",
@@ -63,7 +63,7 @@ int main()
     
     for(int i = 0; i < runTimes; i++)
     {
-        frameCounter = 30;
+        frameCounter = 60;
         
         before = SDL_GetPerformanceCounter();
         FPSLoop_Run(fps);
@@ -74,7 +74,7 @@ int main()
         delta = after - before;
         deltaMS = (delta * 1000) / freq;
         
-        printf("That took %" PRIu64 " (%" PRIu64 " ms)\n", delta, deltaMS);
+        printf("That took %" PRIu64 " (%" PRIu64 " ms) (Average frame: %1.2f)\n", delta, deltaMS, FPSLoop_GetAverageFPS(fps));
         
         amount[i] = deltaMS;
         average += deltaMS;

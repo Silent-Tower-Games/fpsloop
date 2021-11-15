@@ -53,3 +53,17 @@ This type combines `BURNCPU` and `SLEEP` to use a little more CPU power & get a 
 ### NOTHING
 
 This type does nothing for timing whatsoever. This might be useful if you explicitly use vsync, but also it really might not.
+
+## Other Methods
+
+### GetAverageFPS
+
+`float FPSLoop_GetAverageFPS(FPSLoop*)` will return a `float` value of the average of the last 120 frames (or a different number, if given a compiler flag for `FPSLOOP_FRAME_PERFORMANCE_COUNT`).
+
+### GetLoopTypeString
+
+`char* FPSLoop_GetLoopTypeString(FPSLoop*)` will return a string denoting which loop type is being used for the given `FPSLoop` instance.
+
+### GetLoopTypeStringFromType
+
+`char* FPSLoop_GetLoopTypeStringFromType(FPSLoop_Type)` will return a string corresponding to the given `FPSLoop_Type` value.

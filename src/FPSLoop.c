@@ -2,6 +2,18 @@
 #include <SDL2/SDL.h>
 #include "FPSLoop.h"
 
+// FIXME: SLEEPSMART is slower than SLEEP now?
+
+#ifndef FPSLOOP_FRAME_PERFORMANCE_COUNT
+// How many frames do we want to keep for our average?
+#define FPSLOOP_FRAME_PERFORMANCE_COUNT 120
+#endif
+
+#ifndef FPSLOOP_SLEEP_PERFORMANCE_COUNT
+// How many sleeps do we want to keep for our average?
+#define FPSLOOP_SLEEP_PERFORMANCE_COUNT 120
+#endif
+
 typedef struct FPSLoop
 {
     // type of loop timing
@@ -10,30 +22,41 @@ typedef struct FPSLoop
     int FPS;
     // your app logic function. runs once per frame & returns a bool for whether or not to exit
     int (*frame)();
-    // 
-    //Uint64 
+    // time spent on the last X frames
+    Uint64 frameTiming[FPSLOOP_FRAME_PERFORMANCE_COUNT];
+    // average time spent on a frame over the last X frames
+    Uint64 frameAverage;
+    // time spent on the last X sleeps
+    Uint64 sleepTiming[FPSLOOP_SLEEP_PERFORMANCE_COUNT];
+    // number of sleeps counted so far. caps at FPSLOOP_SLEEP_PERFORMANCE_COUNT
+    Uint64 sleepHighest;
 } FPSLoop;
 
 FPSLoop* FPSLoop_Create(FPSLoop_Type type, int FPS, int (*frame)())
 {
     assert(frame != NULL);
     
-    FPSLoop* ret = malloc(sizeof(FPSLoop));
-    *ret = (FPSLoop){
-        .type = type,
-        .FPS = FPS,
-        .frame = frame,
-    };
+    FPSLoop* ret = calloc(1, sizeof(FPSLoop));
+    ret->type = type;
+    ret->FPS = FPS;
+    ret->frame = frame;
     
     return ret;
 }
 
-char* FPSLoop_GetTypeString(FPSLoop* fps)
+float FPSLoop_GetAverageFPS(FPSLoop* fps)
 {
-    return FPSLoop_GetTypeStringFromType(fps->type);
+    const Uint64 freq = SDL_GetPerformanceFrequency();
+    
+    return ((freq * 1000) / fps->frameAverage) / 1000.0f;
 }
 
-char* FPSLoop_GetTypeStringFromType(FPSLoop_Type type)
+char* FPSLoop_GetLoopTypeString(FPSLoop* fps)
+{
+    return FPSLoop_GetLoopTypeStringFromType(fps->type);
+}
+
+char* FPSLoop_GetLoopTypeStringFromType(FPSLoop_Type type)
 {
     switch(type)
     {
@@ -58,21 +81,39 @@ char* FPSLoop_GetTypeStringFromType(FPSLoop_Type type)
     return NULL;
 }
 
-static int FPSLoop_Frame(int (*frame)())
+static int FPSLoop_Frame(FPSLoop* fps)
 {
-    int frameResult = frame();
+    int frameResult = fps->frame();
+    
+    Uint64 current = SDL_GetPerformanceCounter();
+    
+    // This loop accomplishes two things:
+    // - move frames 1-through-X-minus-1 to 0-through-X-minus-2
+    // - gets a sum of all frame counts (starting with 1, not 0)
+    fps->frameAverage = 0;
+    for(int i = 1; i < FPSLOOP_FRAME_PERFORMANCE_COUNT; i++)
+    {
+        fps->frameAverage += fps->frameTiming[i] - fps->frameTiming[i - 1];
+        
+        fps->frameTiming[i - 1] = fps->frameTiming[i];
+    }
+    
+    fps->frameTiming[FPSLOOP_FRAME_PERFORMANCE_COUNT - 1] = current;
+    
+    fps->frameAverage += fps->frameTiming[FPSLOOP_FRAME_PERFORMANCE_COUNT - 1] - fps->frameTiming[FPSLOOP_FRAME_PERFORMANCE_COUNT - 2];
+    fps->frameAverage /= FPSLOOP_FRAME_PERFORMANCE_COUNT;
     
     return frameResult;
 }
 
-static void FPSLoop_Run_BurnCPU(int FPS, int (*frame)())
+static void FPSLoop_Run_BurnCPU(FPSLoop* fps)
 {
     const Uint64 freq = SDL_GetPerformanceFrequency();
     Uint64 currentTime;
     Uint64 lastTime = SDL_GetPerformanceCounter();
     Uint64 deltaTime;
     int64_t accumulator = 0;
-    Uint64 FPSMS = freq / FPS;
+    Uint64 FPSMS = freq / fps->FPS;
     
     int quit = 0;
     
@@ -88,7 +129,7 @@ static void FPSLoop_Run_BurnCPU(int FPS, int (*frame)())
         
         while(accumulator > FPSMS)
         {
-            quit = FPSLoop_Frame(frame);
+            quit = FPSLoop_Frame(fps);
             
             if(quit)
             {
@@ -100,19 +141,19 @@ static void FPSLoop_Run_BurnCPU(int FPS, int (*frame)())
     }
 }
 
-static void FPSLoop_Run_Nothing(int FPS, int (*frame)())
+static void FPSLoop_Run_Nothing(FPSLoop* fps)
 {
-    while(!FPSLoop_Frame(frame)){}
+    while(!FPSLoop_Frame(fps)){}
 }
 
-static void FPSLoop_Run_Sleep(int FPS, int (*frame)())
+static void FPSLoop_Run_Sleep(FPSLoop* fps)
 {
     const Uint64 freq = SDL_GetPerformanceFrequency();
     Uint64 currentTime;
     Uint64 lastTime = SDL_GetPerformanceCounter();
     Uint64 deltaTime;
     int64_t accumulator = 0;
-    Uint64 FPSMS = freq / FPS;
+    Uint64 FPSMS = freq / fps->FPS;
     
     int quit = 0;
     
@@ -128,7 +169,7 @@ static void FPSLoop_Run_Sleep(int FPS, int (*frame)())
         
         while(accumulator > FPSMS)
         {
-            quit = FPSLoop_Frame(frame);
+            quit = FPSLoop_Frame(fps);
             
             if(quit)
             {
@@ -145,14 +186,14 @@ static void FPSLoop_Run_Sleep(int FPS, int (*frame)())
     }
 }
 
-static void FPSLoop_Run_SleepSmart(int FPS, int (*frame)())
+static void FPSLoop_Run_SleepSmart(FPSLoop* fps)
 {
     const Uint64 freq = SDL_GetPerformanceFrequency();
     Uint64 currentTime;
     Uint64 lastTime = SDL_GetPerformanceCounter();
     Uint64 deltaTime;
     int64_t accumulator = 0;
-    Uint64 FPSMS = freq / FPS;
+    Uint64 FPSMS = freq / fps->FPS;
     
     int quit = 0;
     
@@ -168,7 +209,7 @@ static void FPSLoop_Run_SleepSmart(int FPS, int (*frame)())
         
         while(accumulator > FPSMS)
         {
-            quit = FPSLoop_Frame(frame);
+            quit = FPSLoop_Frame(fps);
             
             if(quit)
             {
@@ -179,9 +220,29 @@ static void FPSLoop_Run_SleepSmart(int FPS, int (*frame)())
         }
         
         // Sleep for 1ms if our target time is more than 1ms away
-        if(accumulator < FPSMS - (1000 / freq))
+        if(accumulator < FPSMS - fps->sleepHighest)
         {
+            Uint64 before = SDL_GetPerformanceCounter();
             SDL_Delay(1);
+            Uint64 after = SDL_GetPerformanceCounter();
+            
+            fps->sleepHighest = 0;
+            for(int i = 1; i < FPSLOOP_SLEEP_PERFORMANCE_COUNT; i++)
+            {
+                if(fps->sleepTiming[i] > fps->sleepHighest)
+                {
+                    fps->sleepHighest = fps->sleepTiming[i];
+                }
+                
+                fps->sleepTiming[i - 1] = fps->sleepTiming[i];
+            }
+            
+            fps->sleepTiming[FPSLOOP_SLEEP_PERFORMANCE_COUNT - 1] = after - before;
+            
+            if(fps->sleepTiming[FPSLOOP_SLEEP_PERFORMANCE_COUNT - 1] > fps->sleepHighest)
+            {
+                fps->sleepHighest = fps->sleepTiming[FPSLOOP_SLEEP_PERFORMANCE_COUNT - 1];
+            }
         }
     }
 }
@@ -192,22 +253,22 @@ void FPSLoop_Run(FPSLoop* fps)
     {
         case FPSLOOP_TYPE_NOTHING:
         {
-            FPSLoop_Run_Nothing(fps->FPS, fps->frame);
+            FPSLoop_Run_Nothing(fps);
         } break;
         
         case FPSLOOP_TYPE_BURNCPU:
         {
-            FPSLoop_Run_BurnCPU(fps->FPS, fps->frame);
+            FPSLoop_Run_BurnCPU(fps);
         } break;
         
         case FPSLOOP_TYPE_SLEEP:
         {
-            FPSLoop_Run_Sleep(fps->FPS, fps->frame);
+            FPSLoop_Run_Sleep(fps);
         } break;
         
         case FPSLOOP_TYPE_SLEEPSMART:
         {
-            FPSLoop_Run_SleepSmart(fps->FPS, fps->frame);
+            FPSLoop_Run_SleepSmart(fps);
         } break;
         
         default:

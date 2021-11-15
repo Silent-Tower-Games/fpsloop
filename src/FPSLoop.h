@@ -32,13 +32,22 @@ typedef struct FPSLoop FPSLoop;
 FPSLoop* FPSLoop_Create(FPSLoop_Type type, int FPS, int (*frame)());
 
 /**
+ * Get the average framerate from a given FPSLoop instance
+ * 
+ * \param fps pointer to your FPSLoop instance
+ * 
+ * \return average FPS
+ */
+float FPSLoop_GetAverageFPS(FPSLoop* fps);
+
+/**
  * Get a string denoting what type of loop timing you're using
  * 
  * \param fps pointer to your FPSLoop instance
  * 
  * \return type string
  */
-char* FPSLoop_GetTypeString(FPSLoop* fps);
+char* FPSLoop_GetLoopTypeString(FPSLoop* fps);
 
 /**
  * Get a string denoting what type of loop timing you're using
@@ -47,7 +56,7 @@ char* FPSLoop_GetTypeString(FPSLoop* fps);
  * 
  * \return type string
  */
-char* FPSLoop_GetTypeStringFromType(FPSLoop_Type type);
+char* FPSLoop_GetLoopTypeStringFromType(FPSLoop_Type type);
 
 /**
  * Run your FPSLoop application
