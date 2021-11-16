@@ -1,14 +1,10 @@
 #pragma once
 
-#include <SDL2/SDL.h>
-
 /**
  * Ways for FPSLoop to keep time
  */
 typedef enum FPSLoop_Type
 {
-    // invalid
-    FPSLOOP_TYPE_INVALID = -1,
     // checks the time each tick
     FPSLOOP_TYPE_BURNCPU,
     // does nothing for timing, just runs in a loop

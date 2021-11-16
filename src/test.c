@@ -1,6 +1,4 @@
-#include <assert.h>
 #include <stdio.h>
-#include <time.h>
 #include <SDL2/SDL.h>
 #include "FPSLoop.h"
 
@@ -68,8 +66,6 @@ int main()
         before = SDL_GetPerformanceCounter();
         FPSLoop_Run(fps);
         after = SDL_GetPerformanceCounter();
-        
-        assert(frameCounter == 0);
         
         delta = after - before;
         deltaMS = (delta * 1000) / freq;

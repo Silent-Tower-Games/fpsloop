@@ -2,8 +2,6 @@
 #include <SDL2/SDL.h>
 #include "FPSLoop.h"
 
-// FIXME: SLEEPSMART is slower than SLEEP now?
-
 #ifndef FPSLOOP_FRAME_PERFORMANCE_COUNT
 // How many frames do we want to keep for our average?
 #define FPSLOOP_FRAME_PERFORMANCE_COUNT 120
@@ -219,12 +217,12 @@ static void FPSLoop_Run_SleepSmart(FPSLoop* fps)
             accumulator -= FPSMS;
         }
         
-        // Sleep for 1ms if our target time is more than 1ms away
+        // Sleep for 1ms if our target time is more than sleepHighest away
         if(accumulator < FPSMS - fps->sleepHighest)
         {
-            Uint64 before = SDL_GetPerformanceCounter();
+            const Uint64 before = SDL_GetPerformanceCounter();
             SDL_Delay(1);
-            Uint64 after = SDL_GetPerformanceCounter();
+            const Uint64 after = SDL_GetPerformanceCounter();
             
             fps->sleepHighest = 0;
             for(int i = 1; i < FPSLOOP_SLEEP_PERFORMANCE_COUNT; i++)
@@ -269,11 +267,6 @@ void FPSLoop_Run(FPSLoop* fps)
         case FPSLOOP_TYPE_SLEEPSMART:
         {
             FPSLoop_Run_SleepSmart(fps);
-        } break;
-        
-        default:
-        {
-            assert(0);
         } break;
     }
 }
