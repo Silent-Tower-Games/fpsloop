@@ -1,6 +1,15 @@
 # FPSLoop
 
-A good & simple gameplay loop written in C.
+A good & simple gameplay loop for C and SDL2.
+
+## Dependencies
+
+- A C compiler
+- SDL2
+
+## Building
+
+The easiest way is just to run `make`, which will build the shared lib & the test program. There are other methods in the Makefile as well.
 
 ## Example
 
