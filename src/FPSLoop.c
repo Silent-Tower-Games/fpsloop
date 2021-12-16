@@ -79,6 +79,15 @@ char* FPSLoop_GetLoopTypeStringFromType(FPSLoop_Type type)
     return NULL;
 }
 
+void FPSLoop_SetLoopType(FPSLoop* fps, FPSLoop_Type type) 
+{
+    assert(fps != NULL);
+    // So you can't change to an invalid loop type
+    assert(FPSLoop_GetLoopTypeStringFromType(type) != NULL);
+
+    fps->type = type;
+}
+
 static int FPSLoop_Frame(FPSLoop* fps)
 {
     int frameResult = fps->frame();

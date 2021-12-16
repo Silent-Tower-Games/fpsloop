@@ -74,6 +74,10 @@ int main()
         
         amount[i] = deltaMS;
         average += deltaMS;
+
+        // Testing loop type change
+        FPSLoop_SetLoopType(fps, FPSLOOP_TYPE_SLEEP);
+        printf("Using loop type \"%s\"\n", FPSLoop_GetLoopTypeString(fps));
     }
     
     average /= runTimes;
@@ -82,7 +86,6 @@ int main()
     
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
-    
     FPSLoop_Destroy(fps);
     
     return 0;

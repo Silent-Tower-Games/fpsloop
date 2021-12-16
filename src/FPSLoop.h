@@ -55,6 +55,15 @@ char* FPSLoop_GetLoopTypeString(FPSLoop* fps);
 char* FPSLoop_GetLoopTypeStringFromType(FPSLoop_Type type);
 
 /**
+ * Set a new loop type to a FPSLoop instance
+ * 
+ * \param fps pointer to your FPSLoop instance
+ * \param type new loop type to be set
+ *
+ */
+void FPSLoop_SetLoopType(FPSLoop* fps, FPSLoop_Type type);
+
+/**
  * Run your FPSLoop application
  * 
  * \param fps pointer to your FPSLoop instance
