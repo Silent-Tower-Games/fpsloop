@@ -35,7 +35,3 @@ clean:
 .PHONY=valgrind
 valgrind:
 	valgrind --leak-check=full ./main 2> valgrind.txt
-
-.PHONY=debug
-debug:
-	echo ${INCLUDE_FILES}
