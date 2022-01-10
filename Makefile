@@ -1,9 +1,3 @@
-CC=gcc
-CFLAGS=-pedantic -O3
-INCLUDE_FILES=
-LIBRARY_PATHS=`sdl2-config --libs` -L`pwd`
-SHARED_EXTENSION=so
-
 .PHONY=application
 application:
 	make lib
@@ -44,4 +38,4 @@ valgrind:
 
 .PHONY=debug
 debug:
-	echo ${LIBRARY_PATHS}
+	echo ${INCLUDE_FILES}

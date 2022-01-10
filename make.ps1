@@ -1,1 +1,0 @@
-make CFLAGS=-g INCLUDE_FILES="-IC:\Software\SDL2-2.0.16\x86_64-w64-mingw32\include" LIBRARY_PATHS="-LC:\Software\SDL2-2.0.16\x86_64-w64-mingw32\lib -LC:\Software\fpsloop -lSDL2" SHARED_EXTENSION="dll"

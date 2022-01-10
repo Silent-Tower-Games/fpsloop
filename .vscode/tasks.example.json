@@ -3,8 +3,17 @@
         {
             "type": "shell",
             "label": "Make",
-            "command": "make CFLAGS=-g",
+            "command": "make",
             "args": [],
+            "options": {
+                "env": {
+                    "CC": "gcc",
+                    "CFLAGS": "-g -pedantic",
+                    "INCLUDE_FILES": "-IC:\\Software\\SDL2-2.0.16\\x86_64-w64-mingw32\\include",
+                    "LIBRARY_PATHS": "-LC:\\Software\\SDL2-2.0.16\\x86_64-w64-mingw32\\lib -LC:\\Software\\fpsloop -lSDL2",
+                    "SHARED_EXTENSION": "dll"
+                }
+            },
             "group": {
                 "kind": "build",
                 "isDefault": true
