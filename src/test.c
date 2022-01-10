@@ -1,4 +1,6 @@
+#include <inttypes.h>
 #include <stdio.h>
+#define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
 #include "FPSLoop.h"
 
@@ -24,7 +26,7 @@ int frame()
     return 0;
 }
 
-int main()
+int main(int argc, char** argv)
 {
     printf("Hello, World!\n");
     
@@ -76,8 +78,8 @@ int main()
         average += deltaMS;
 
         // Testing loop type change
-        FPSLoop_SetLoopType(fps, FPSLOOP_TYPE_SLEEP);
-        printf("Using loop type \"%s\"\n", FPSLoop_GetLoopTypeString(fps));
+        //FPSLoop_SetLoopType(fps, FPSLOOP_TYPE_SLEEP);
+        //printf("Using loop type \"%s\"\n", FPSLoop_GetLoopTypeString(fps));
     }
     
     average /= runTimes;
