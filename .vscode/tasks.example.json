@@ -2,7 +2,26 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "Make",
+            "label": "Make Linux",
+            "command": "make",
+            "args": [],
+            "options": {
+                "env": {
+                    "CC": "gcc",
+                    "CFLAGS": "-g -pedantic",
+                    "INCLUDE_FILES": "",
+                    "LIBRARY_PATHS": "`sdl2-config --libs`",
+                    "SHARED_EXTENSION": "so"
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "Make Windows",
             "command": "make",
             "args": [],
             "options": {

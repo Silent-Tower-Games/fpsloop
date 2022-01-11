@@ -76,10 +76,6 @@ int main(int argc, char** argv)
         
         amount[i] = deltaMS;
         average += deltaMS;
-
-        // Testing loop type change
-        //FPSLoop_SetLoopType(fps, FPSLOOP_TYPE_SLEEP);
-        //printf("Using loop type \"%s\"\n", FPSLoop_GetLoopTypeString(fps));
     }
     
     average /= runTimes;

@@ -45,6 +45,12 @@ int main()
 
 ## Loop Types
 
+You can change the Loop Type mid-application:
+
+```c
+FPSLoop_SetLoopType(fps, FPSLOOP_TYPE_SLEEP); // replace _SLEEP with your desired loop type
+```
+
 The enum `FPSLoop_Type` contains several values:
 
 ### BURNCPU
