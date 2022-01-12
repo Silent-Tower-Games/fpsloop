@@ -42,7 +42,9 @@
             "type": "shell",
             "label": "Make macOS",
             "command": "make",
-            "args": [],
+            "args": [
+                "application-static"
+            ],
             "options": {
                 "env": {
                     "CC": "clang",
