@@ -8,18 +8,18 @@ endif
 application:
 	make lib
 	make objs
-	${CC} ${CFLAGS} ./src/test.o -o main ${LIBRARY_PATHS} -lfpsloop ${RPATH}
+	${CC} ${CFLAGS} ./src/test.o -o main ${LIBS} -lfpsloop ${RPATH}
 
 .PHONY=application-static
 application-static:
 	make lib-static
 	make objs
-	${CC} ${CFLAGS} ./src/test.o libfpsloop.a -o main ${LIBRARY_PATHS}
+	${CC} ${CFLAGS} ./src/test.o libfpsloop.a -o main ${LIBS}
 
 .PHONY=lib
 lib:
 	make objs-lib
-	${CC} ${CFLAGS} ./src/FPSLoop.o -shared -o libfpsloop.${SHARED_EXTENSION} ${LIBRARY_PATHS}
+	${CC} ${CFLAGS} ./src/FPSLoop.o -shared -o libfpsloop.${EXT} ${LIBS}
 
 .PHONY=lib-static
 lib-static:
@@ -28,15 +28,15 @@ lib-static:
 
 .PHONY=objs
 objs:
-	${CC} ${CFLAGS} -c ./src/test.c -o ./src/test.o ${INCLUDE_FILES}
+	${CC} ${CFLAGS} -c ./src/test.c -o ./src/test.o ${INCS}
 
 .PHONY=objs-lib
 objs-lib:
-	${CC} ${CFLAGS} -c ./src/FPSLoop.c -o ./src/FPSLoop.o -fPIC ${INCLUDE_FILES} ${LIBRARY_PATHS}
+	${CC} ${CFLAGS} -c ./src/FPSLoop.c -o ./src/FPSLoop.o -fPIC ${INCS} ${LIBS}
 
 .PHONY=clean
 clean:
-	rm -f ./src/*.o ./main ./libfpsloop.${SHARED_EXTENSION}
+	rm -f ./src/*.o ./main ./libfpsloop.${EXT}
 
 .PHONY=valgrind
 valgrind:
