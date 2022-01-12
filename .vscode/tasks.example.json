@@ -37,6 +37,25 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "type": "shell",
+            "label": "Make macOS",
+            "command": "make",
+            "args": [],
+            "options": {
+                "env": {
+                    "CC": "clang",
+                    "CFLAGS": "-g -pedantic",
+                    "INCLUDE_FILES": "-I/usr/local/Cellar/sdl2/2.0.18/include",
+                    "LIBRARY_PATHS": "-L/usr/local/Cellar/sdl2/2.0.18/lib -L`pwd` -lSDL2",
+                    "SHARED_EXTENSION": "so"
+                }
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ],
     "version": "2.0.0"

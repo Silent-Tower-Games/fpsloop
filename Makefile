@@ -1,8 +1,14 @@
+RPATH=-Wl,-rpath=./
+
+ifeq (${CC}, clang)
+RPATH=-Wl,-rpath ./
+endif
+
 .PHONY=application
 application:
 	make lib
 	make objs
-	${CC} ${CFLAGS} ./src/test.o -o main ${LIBRARY_PATHS} -lfpsloop -Wl,-rpath=./
+	${CC} ${CFLAGS} ./src/test.o -o main ${LIBRARY_PATHS} -lfpsloop ${RPATH}
 
 .PHONY=application-static
 application-static:
