@@ -5,15 +5,6 @@
             "label": "Make Linux",
             "command": "make",
             "args": [],
-            "options": {
-                "env": {
-                    "CC": "gcc",
-                    "CFLAGS": "-g -pedantic",
-                    "INCS": "",
-                    "LIBS": "-L`pwd` `sdl2-config --libs`",
-                    "EXT": "so"
-                }
-            },
             "group": {
                 "kind": "build",
                 "isDefault": true

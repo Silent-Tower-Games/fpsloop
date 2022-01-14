@@ -2,7 +2,7 @@
 #include <stdio.h>
 #define SDL_MAIN_HANDLED
 #include <SDL2/SDL.h>
-#include "FPSLoop.h"
+#include "FPSLoop/FPSLoop.h"
 
 #ifndef FPSLOOPTYPE
 #define FPSLOOPTYPE FPSLOOP_TYPE_SLEEPSMART

@@ -5,7 +5,7 @@
             "name": "gcc Linux",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/main",
+            "program": "${workspaceFolder}/FPSLoopTest",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
