@@ -22,6 +22,8 @@ typedef struct FPSLoop FPSLoop;
  * 
  * \param type how the FPS timer should work
  * \param FPS how many frames per second your timer should run at
+ * \param frame callable that runs once per frame; put your game logic in here.
+ *              must return an int; 0 to keep going, truthy to quit
  * 
  * \returns pointer to your FPSLoop instance
  */
