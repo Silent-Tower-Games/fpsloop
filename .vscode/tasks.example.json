@@ -10,7 +10,7 @@
                     "CC": "gcc",
                     "CFLAGS": "-g -pedantic",
                     "INCS": "",
-                    "LIBS": "`sdl2-config --libs`",
+                    "LIBS": "`sdl2-config --libs` -L`pwd`",
                     "EXT": "so"
                 }
             },

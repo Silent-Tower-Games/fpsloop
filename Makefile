@@ -1,4 +1,6 @@
-RPATH=-Wl,-rpath=./
+CC?=gcc
+EXT?=so
+RPATH?=-Wl,-rpath=./
 
 ifeq (${CC}, clang)
 RPATH=-Wl,-rpath ./
