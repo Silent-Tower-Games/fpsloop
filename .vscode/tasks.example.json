@@ -2,58 +2,9 @@
     "tasks": [
         {
             "type": "shell",
-            "label": "Make Linux",
+            "label": "Make",
             "command": "make",
             "args": [],
-            "options": {
-                "env": {
-                    "CC": "gcc",
-                    "CFLAGS": "-g -pedantic",
-                    "INCS": "",
-                    "LIBS": "`sdl2-config --libs` -L`pwd`",
-                    "EXT": "so"
-                }
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "type": "shell",
-            "label": "Make Windows",
-            "command": "make",
-            "args": [],
-            "options": {
-                "env": {
-                    "CC": "gcc",
-                    "CFLAGS": "-g -pedantic",
-                    "INCS": "-IC:\\Software\\SDL2-2.0.16\\x86_64-w64-mingw32\\include",
-                    "LIBS": "-LC:\\Software\\SDL2-2.0.16\\x86_64-w64-mingw32\\lib -LC:\\Software\\fpsloop -lSDL2",
-                    "EXT": "dll"
-                }
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "type": "shell",
-            "label": "Make macOS",
-            "command": "make",
-            "args": [
-                "application-static"
-            ],
-            "options": {
-                "env": {
-                    "CC": "clang",
-                    "CFLAGS": "-g -pedantic",
-                    "INCS": "-I/usr/local/Cellar/sdl2/2.0.18/include",
-                    "LIBS": "-L/usr/local/Cellar/sdl2/2.0.18/lib -L`pwd` -lSDL2",
-                    "EXT": "so"
-                }
-            },
             "group": {
                 "kind": "build",
                 "isDefault": true

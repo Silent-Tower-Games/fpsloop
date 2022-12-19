@@ -1,10 +1,9 @@
-CC?=gcc
-EXT?=so
+include .env
+
 RPATH?=-Wl,-rpath=./
 
-ifeq (${CC}, clang)
-RPATH=-Wl,-rpath ./
-endif
+INCS=${INC_SDL2}
+LIBS=${LIB_SDL2} -L`pwd`
 
 .PHONY=application
 application:

@@ -5,6 +5,7 @@
 *.so
 *.a
 *.dll
+.env
 main
 main.exe
 valgrind.txt
