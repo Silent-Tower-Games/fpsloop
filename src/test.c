@@ -11,7 +11,7 @@
 SDL_Window* window;
 SDL_Renderer* renderer;
 int frameCounter;
-int frame()
+char frame()
 {
     frameCounter--;
     

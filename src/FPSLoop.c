@@ -19,7 +19,7 @@ typedef struct FPSLoop
     // frames per second
     int FPS;
     // your app logic function. runs once per frame & returns a bool for whether or not to exit
-    int (*frame)();
+    char (*frame)();
     // time spent on the last X frames
     Uint64 frameTiming[FPSLOOP_FRAME_PERFORMANCE_COUNT];
     // average time spent on a frame over the last X frames
@@ -30,7 +30,7 @@ typedef struct FPSLoop
     Uint64 sleepHighest;
 } FPSLoop;
 
-FPSLoop* FPSLoop_Create(FPSLoop_Type type, int FPS, int (*frame)())
+FPSLoop* FPSLoop_Create(FPSLoop_Type type, int FPS, char (*frame)())
 {
     assert(frame != NULL);
     
